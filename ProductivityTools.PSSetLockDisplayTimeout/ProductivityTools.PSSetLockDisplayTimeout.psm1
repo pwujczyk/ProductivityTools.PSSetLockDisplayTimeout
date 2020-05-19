@@ -10,29 +10,35 @@ function Set-LockDisplayTimeout {
 	)
 	Write-Verbose "Hello from Set-LockDisplayTimeout"
 
+	AddOptionToPowerOptions
+
 	$seconds=$Minutes*60;
 	$batterycommand="powercfg /SETDCVALUEINDEX SCHEME_CURRENT SUB_VIDEO VIDEOCONLOCK " +$seconds
 	$pluggedInCommand="powercfg /SETACVALUEINDEX SCHEME_CURRENT SUB_VIDEO VIDEOCONLOCK "+ $seconds
 
 	if ($Battery.IsPresent)
 	{
-		Invoke-Command -ScriptBlock $batterycommand;
+		Invoke-Expression -Command  $batterycommand;
 	}
 
 	if ($PluggedIn.IsPresent)
 	{
-		Invoke-Command -ScriptBlock $pluggedInCommand;
+		Invoke-Expression -Command $pluggedInCommand;
 	}
 
 	if($Battery.IsPresent -eq $false -and $PluggedIn.IsPresent -eq $false)
 	{
-		Invoke-Command -ScriptBlock $batterycommand;
-		Invoke-Command -ScriptBlock $pluggedInCommand;
+		Invoke-Expression -Command $batterycommand;
+		Invoke-Expression -Command $pluggedInCommand;
 	}
 }
 
 function AddOptionToPowerOptions()
 {
-	$command='powercfg -attributes SUB_SLEEP 7bc4a2f9-d8fc-4469-b07b-33eb785aaca0 -ATTRIB_HIDE'
-	Invoke-Command -ScriptBlock $command
+	Write-Verbose "Adding options to power options"
+	$command='powercfg -attributes SUB_VIDEO 8EC4B3A5-6868-48c2-BE75-4F3044BE88A7 -ATTRIB_HIDE'
+	#$command='powercfg -attributes SUB_VIDEO 8EC4B3A5-6868-48c2-BE75-4F3044BE88A7 +ATTRIB_HIDE'
+	Write-Verbose "Command which will be executed $command"
+	Invoke-Expression -Command $command
+	Write-Verbose "Options to power options should be added"
 }
