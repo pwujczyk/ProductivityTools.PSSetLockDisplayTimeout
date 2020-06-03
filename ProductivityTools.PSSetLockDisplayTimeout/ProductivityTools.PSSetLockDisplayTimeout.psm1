@@ -9,9 +9,13 @@ function Set-LockDisplayTimeout {
 		[switch]$PluggedIn
 	)
 	Write-Verbose "Hello from Set-LockDisplayTimeout"
+	
+	SetEASPolicy  $Minutes
+	SetScreenSaverTimeOut  $Minutes
+	#DispableScreenSaver
 
 	AddOptionToPowerOptions
-	SetLockDisplayTimeout
+	SetLockDisplayTimeout $Minutes $Battery $PluggedIn
 
 	Write-Verbose "Bye, Bye!"
 }
@@ -28,6 +32,13 @@ function AddOptionToPowerOptions()
 
 function SetLockDisplayTimeout()
 {
+
+	param(
+		[int]$Minutes,
+		[switch]$Battery,
+		[switch]$PluggedIn
+	)
+
 	Write-Verbose "Set LockDisplayTimeout start"
 
 	$seconds=$Minutes*60;
@@ -61,3 +72,88 @@ function SetLockDisplayTimeout()
 
 	Write-Verbose "Set LockDisplayTimeout end"
 }
+
+function SetEASPolicy
+{
+
+	param(
+		[int]$Minutes
+	)
+	
+	$registryPath = "HKLM:\SYSTEM\CurrentControlSet\Control\EAS\Policies"
+	$Name = "7"
+	$value = $Minutes*60
+	if(Test-Path $registryPath)
+	{
+		Set-ItemProperty -Path $registryPath -Name $name -Value $value 
+	}
+	else
+	{
+		New-ItemProperty -Path $registryPath -Name $name -Value $value -PropertyType DWORD 
+	}
+}
+
+function GetEASPolicyValue()
+{
+	$registryPath = "HKLM:\SYSTEM\CurrentControlSet\Control\EAS\Policies"
+	$Name = "7"
+	Get-ItemProperty -Path $registryPath -Name $name 
+}
+
+
+function DispableScreenSaver
+{
+	$registryPath = "HKCU:\Software\Policies\Microsoft\Windows\Control Panel\Desktop"
+	$Name = "ScreenSaveActive"
+	$value = "0"
+	if(Test-Path $registryPath)
+	{
+		Set-ItemProperty -Path $registryPath -Name $name -Value $value 
+	}
+	else
+	{
+		New-ItemProperty -Path $registryPath -Name $name -Value $value -PropertyType REG_SZ 
+	}
+}
+
+function CreateNode($path)
+{
+	if(Test-Path $path)
+	{
+		Write-Host "Node $registryPath exists"
+	}
+	else
+	{
+		$parent=Split-Path -Path $path
+		CreateNode $parent
+		
+		$element=Split-Path -Path $path -Leaf
+		New-Item -Path $path -Value $element
+	}
+}
+
+
+function SetScreenSaverTimeOut
+{
+
+	param(
+		[int]$Minutes
+	)
+	
+	
+	$registryPath = "HKCU:\Software\Policies\Microsoft\Windows\Control Panel\Desktop"
+	CreateNode $registryPath
+	
+	$Name = "ScreenSaveTimeOut"
+	$value = $Minutes*60
+	if(Test-Path $registryPath)
+	{
+		Set-ItemProperty -Path $registryPath -Name $name -Value $value 
+	}
+	else
+	{
+		New-ItemProperty -Path $registryPath -Name $name -Value $value -PropertyType REG_SZ 
+	}
+}
+
+Export-ModuleMember Set-LockDisplayTimeout 
