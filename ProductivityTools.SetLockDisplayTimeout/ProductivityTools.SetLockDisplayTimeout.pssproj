@@ -28,8 +28,8 @@
   </PropertyGroup>
   <ItemGroup />
   <ItemGroup>
-    <Compile Include="ProductivityTools.PSSetLockDisplayTimeout.psd1" />
-    <Compile Include="ProductivityTools.PSSetLockDisplayTimeout.psm1" />
+    <Compile Include="ProductivityTools.SetLockDisplayTimeout.psd1" />
+    <Compile Include="ProductivityTools.SetLockDisplayTimeout.psm1" />
     <Compile Include="Runner.ps1" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
