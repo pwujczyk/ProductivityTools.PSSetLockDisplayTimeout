@@ -6,7 +6,8 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>MyApplication</RootNamespace>
     <AssemblyName>MyApplication</AssemblyName>
-    <Name>ProductivityTools.PSSetLockDisplayTimeout</Name>
+    <Name>ProductivityTools.SetLockDisplayTimeout</Name>
+    <ProjectHome />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -27,8 +28,8 @@
   </PropertyGroup>
   <ItemGroup />
   <ItemGroup>
-    <Compile Include="ProductivityTools.PSSetLockDisplayTimeout.psd1" />
-    <Compile Include="ProductivityTools.PSSetLockDisplayTimeout.psm1" />
+    <Compile Include="ProductivityTools.SetLockDisplayTimeout.psd1" />
+    <Compile Include="ProductivityTools.SetLockDisplayTimeout.psm1" />
     <Compile Include="Runner.ps1" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
